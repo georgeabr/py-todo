@@ -8,7 +8,7 @@
 A little program to remind you of upcoming events / unfinished tasks.
 
 Put them into `~/.zshrc` or `~/.bashrc` or whatever you want, and it will stop you from
-putting off important shit.
+putting off stuff.
 
 Pickled (i.e., serialized) todo list objects are saved in ~/.local/share/py-todo/todo.dat by default.
 
@@ -16,20 +16,9 @@ Pickled (i.e., serialized) todo list objects are saved in ~/.local/share/py-todo
 ## Dependencies
 * python >=3.5 (sys, re, pickle, pathlib, datetime, readline)
 
-## Supported Platforms
+## Tested Platforms
 * Linux
 * OSX (tested on 10.14 Mojave)
-
-## Installation
-* Debian / Ubuntu / Mint - [Get latest deb](https://github.com/aesophor/py-todo/releases)
-```
-sudo dpkg -i py-todo_1.3.3-3_all.deb
-```
-
-* Arch Linux - [AUR](https://aur.archlinux.org/packages/py-todo) (Maintained by [RewoundVHS](https://github.com/RewoundVHS))
-```
-yay -S py-todo
-```
 
 * Manual Installation (Linux)
 ```
@@ -53,14 +42,18 @@ Usage: ./todo-ng <argument>
 	m -m --move <index> <new index>             -- Move an item from index to new index.
 	r -r --remove <indices...>                  -- Remove items by their indices.
 	l -l --list ls                              -- List all items.
-	-org --orgfile <filename>                   -- Add org file TODOs.
+	s -s --sort                                 -- Sort items chronologically.
+	-org --orgfile <filename>                   -- Add org file todos.
 
 	h -h --help                                 -- Display help message.
 	v -v --version                              -- Display version info.
-  ```
 
-## Configuration (Optional)
-The default config location is `~/.config/py-todo/config`
+Use date in format YYYY/MM/DD - 2020/07/05, or <days>d - 3d, for due date of todo item
+
+Configuration Options (See ~/.config/todo-ng/config):
+* color = true / false
+* detail_mode = true / false
+Reminders data file: ~/.local/share/todo-ng/todo.dat  ```
 
 ```
 [PY-TODO]
@@ -75,7 +68,8 @@ Discrete Mathematics Exam (Next Wednesday; 5 days left)  # detail_mode = true
 Discrete Mathematics Exam (5 days left)                  # detail_mode = false
 ```
 
-## Contributors
+## Contributors from original repo:
+https://github.com/aesophor/py-todo
 Special thanks to all the contributors! (In lexicographical order)
 * [Arsukeey](https://github.com/Arsukeey) - Added Detail Mode (e.g., Next Wednesday)
 * [christophergeiger3](https://github.com/christophergeiger3) - Reformatted code

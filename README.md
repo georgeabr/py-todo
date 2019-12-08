@@ -10,7 +10,7 @@ A little program to remind you of upcoming events / unfinished tasks.
 Put them into `~/.zshrc` or `~/.bashrc` or whatever you want, and it will stop you from
 putting off stuff.
 
-Pickled (i.e., serialized) todo list objects are saved in ~/.local/share/py-todo/todo.dat by default.
+Pickled (i.e., serialized) todo list objects are saved in ~/.local/share/todo-ng/todo.dat by default.
 
 
 ## Dependencies

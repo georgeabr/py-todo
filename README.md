@@ -86,4 +86,4 @@ Special thanks to all the contributors! (In lexicographical order)
 * [Steampunkery](https://github.com/Steampunkery) - Added -e --edit, -m --move, refactoring
 
 ## License
-Available under the [MIT License](https://github.com/aesophor/py-todo/blob/master/LICENSE)
+Available under the [MIT License](https://github.com/georgeabr/todo-ng/blob/master/LICENSE)

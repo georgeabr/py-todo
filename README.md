@@ -54,16 +54,16 @@ Configuration Options (See ~/.config/todo-ng/config):
 * color = true / false
 * detail_mode = true / false
 Reminders data file: ~/.local/share/todo-ng/todo.dat  ```
-
 ```
+
 [PY-TODO]
 color = true / false
 detail_mode = true / false
 week_start_day = Sun
-```
 
-## Detail Mode
 ```
+## Detail Mode
+
 Discrete Mathematics Exam (Next Wednesday; 5 days left)  # detail_mode = true
 Discrete Mathematics Exam (5 days left)                  # detail_mode = false
 ```

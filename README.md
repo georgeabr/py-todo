@@ -14,7 +14,7 @@ Pickled (i.e., serialized) todo list objects are saved in ~/.local/share/py-todo
 
 
 ## Dependencies
-* python >=3.5 (sys, re, pickle, pathlib, datetime)
+* python >=3.5 (sys, re, pickle, pathlib, datetime, readline)
 
 ## Supported Platforms
 * Linux
@@ -45,17 +45,19 @@ $ cd py-todo && cp todo /usr/local/bin/
 
 ## Usage
 ```
-$ todo                                   # List all items.
-$ todo -a                                # Add an item. (with Title / Expiry Date prompt)
-$ todo -a <title> <expiry_date>          # Add an item. (without Title / Expiry Date prompt)
-$ todo -e <index>                        # Edit an item. (with Title / Expiry Date prompt)
-$ todo -e <index> <title> <expiry_date>  # Edit an item. (without Title / Expiry Date prompt)
-$ todo -m --move <index> <new index>     # Move an item from index to new index.
-$ todo -r <indices>                      # Remove one or more items.
-$ todo -h                                # Display help message.
-$ todo -v                                # Display version info.
-$ todo -org <filename>                   # Adds TODOs from Emacs org mode
-```
+Usage: ./todo-ng <argument>
+	a -a --add add                              -- Add a new item.
+	a -a --add <title> <date or days>           -- Add a new item with a title and expiry date provided.
+	e -e --edit <index>                         -- Edit an item.
+	e -e --edit <index> <title> <date or days>  -- Edit an item with a title and expiry date provided.
+	m -m --move <index> <new index>             -- Move an item from index to new index.
+	r -r --remove <indices...>                  -- Remove items by their indices.
+	l -l --list ls                              -- List all items.
+	-org --orgfile <filename>                   -- Add org file TODOs.
+
+	h -h --help                                 -- Display help message.
+	v -v --version                              -- Display version info.
+  ```
 
 ## Configuration (Optional)
 The default config location is `~/.config/py-todo/config`

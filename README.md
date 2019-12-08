@@ -47,7 +47,7 @@ Use readline keyboard shortcuts to move around the input buffer
 Configuration Options (See ~/.config/todo-ng/config):
 * color = true / false
 * detail_mode = true / false
-Reminders data file: ~/.local/share/todo-ng/todo.dat  ```
+Reminders data file: ~/.local/share/todo-ng/todo.dat
 ```
 
 ```

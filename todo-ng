@@ -168,7 +168,7 @@ def sort_items():
 def list_items():
     """ Iterate through each TodoItem in the items list and print it """
     if len(items) > 0:
-        print("\nToday is " + dt_string + ".\nYou have \033[1;36m[{item_count}]\033[0m item{s} left on the reminder!".format(
+        print("\nToday is " + dt_string + ".\nYou have \033[1;36m[{item_count}]\033[0m item{s} left on the reminder.".format(
             item_count=len(items), s="s" if len(items) >= 2 else ""));
         for index, item in enumerate( items):
             item_str = str(item)

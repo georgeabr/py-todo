@@ -56,10 +56,12 @@ Configuration Options (See ~/.config/todo-ng/config):
 Reminders data file: ~/.local/share/todo-ng/todo.dat  ```
 ```
 
+```
 [PY-TODO]
 color = true / false
 detail_mode = true / false
 week_start_day = Sun
+```
 
 ```
 ## Detail Mode

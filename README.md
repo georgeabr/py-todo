@@ -18,18 +18,11 @@ Pickled (i.e., serialized) todo list objects are saved in ~/.local/share/todo-ng
 
 ## Tested Platforms
 * Linux
-* OSX (tested on 10.14 Mojave)
 
 * Manual Installation (Linux)
 ```
-$ git clone https://github.com/aesophor/py-todo.git
-$ cd py-todo && sudo cp todo /usr/bin/todo
-```
-
-* Manual Installation (OSX)
-```
-$ git clone https://github.com/aesophor/py-todo.git
-$ cd py-todo && cp todo /usr/local/bin/
+$ git clone https://github.com/georgeabr/todo-ng.git
+$ cd todo-ng && sudo cp todo-ng /usr/bin/todo-ng
 ```
 
 ## Usage
@@ -49,6 +42,7 @@ Usage: ./todo-ng <argument>
 	v -v --version                              -- Display version info.
 
 Use date in format YYYY/MM/DD - 2020/07/05, or <days>d - 3d, for due date of todo item
+Use readline keyboard shortcuts to move around the input buffer
 
 Configuration Options (See ~/.config/todo-ng/config):
 * color = true / false

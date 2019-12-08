@@ -221,7 +221,7 @@ def take_input(title_pos, date_pos, default_title=None):
     else:
         title = sys.argv[title_pos] if len(sys.argv) > title_pos else input("Title: ")
 
-    exp_date_str = sys.argv[date_pos] if len(sys.argv) > date_pos else input("Expiry date (YYYY/MM/DD or <days>d) (Optional): ")
+    exp_date_str = sys.argv[date_pos] if len(sys.argv) > date_pos else input("Due date (YYYY/MM/DD or <days>d) (Optional): ")
 
     return title if title else default_title, exp_date_str
 
@@ -263,9 +263,9 @@ def scrape_date(line):
 def usage():
     return "\nUsage: " + sys.argv[0] + " <argument>\n" \
           "\ta -a --add add                              -- Add a new item.\n" \
-          "\ta -a --add <title> <date or days>           -- Add a new item with a title and expiry date provided.\n" \
+          "\ta -a --add <title> <date or days>           -- Add a new item with a title and due date provided.\n" \
           "\te -e --edit <index>                         -- Edit an item.\n" \
-          "\te -e --edit <index> <title> <date or days>  -- Edit an item with a title and expiry date provided.\n" \
+          "\te -e --edit <index> <title> <date or days>  -- Edit an item with a title and due date provided.\n" \
           "\tm -m --move <index> <new index>             -- Move an item from index to new index.\n" \
           "\tr -r --remove <indices...>                  -- Remove items by their indices.\n" \
           "\tl -l --list ls                              -- List all items.\n" \
@@ -275,7 +275,7 @@ def usage():
           "\th -h --help                                 -- Display help message.\n" \
           "\tv -v --version                              -- Display version info.\n" \
           "\n" \
-          "Use date in format YYYY/MM/DD - 2020/07/05, or <days>d - 3d, for due date of todo item\n\n" \
+          "Use due date in format YYYY/MM/DD - 2020/07/05, or <days>d - 3d, for due date of todo item\n\n" \
           "Configuration Options (See " + config_location + config_name + "):\n" \
           "* color = true / false\n" \
           "* detail_mode = true / false\n" \

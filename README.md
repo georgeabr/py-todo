@@ -69,9 +69,11 @@ week_start_day = Sun
 Discrete Mathematics Exam (Next Wednesday; 5 days left)  # detail_mode = true
 Discrete Mathematics Exam (5 days left)                  # detail_mode = false
 ```
+## Author of the original script, on which this fork is based
+Copyright (c) 2017-2018 aesophor
+https://github.com/aesophor/py-todo
 
 ## Contributors from original repo:
-https://github.com/aesophor/py-todo
 Special thanks to all the contributors! (In lexicographical order)
 * [Arsukeey](https://github.com/Arsukeey) - Added Detail Mode (e.g., Next Wednesday)
 * [christophergeiger3](https://github.com/christophergeiger3) - Reformatted code

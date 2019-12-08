@@ -284,10 +284,9 @@ def usage():
 
 def print_version():
     print("\ntodo-ng 1.0.1 - with readline - "
-           "based on py-todo by Marco Wang\n"
-          "\n"
-          "This is free software, see the source for copying conditions.  There is NO\n"
-          "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\n")
+           "Copyleft George Abraham\n"
+           "Based on py-todo by Marco Wang\n"
+           "For license, see https://github.com/georgeabr/todo-ng\n")
 
 
 

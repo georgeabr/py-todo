@@ -27,8 +27,8 @@ from configparser import ConfigParser
 from argparse import ArgumentParser
 
 """ Define config and data file locations """
-config_location = str(Path.home()) + '/.config/py-todo/'
-datafile_location = str(Path.home()) + '/.local/share/py-todo/'
+config_location = str(Path.home()) + '/.config/todo-ng/'
+datafile_location = str(Path.home()) + '/.local/share/todo-ng/'
 
 """ Define config and data file names """
 config_name = 'config'
@@ -151,13 +151,14 @@ def insert_todo_item(index, todo_item):
     :param index: The index to insert at
     :param todo_item: The item to insert
     """
+    index = 1
     items.insert(index, todo_item)
 
 
 def remove_item(indices: list):
     """ Removes a TodoItem from the items list """
     for index in sorted(indices, reverse=True):
-        del items[index]
+        del items[index-1]
 
 
 def sort_items():
@@ -169,10 +170,9 @@ def list_items():
     if len(items) > 0:
         print("\nToday is " + dt_string + ".\nYou have \033[1;36m[{item_count}]\033[0m item{s} left on the reminder!".format(
             item_count=len(items), s="s" if len(items) >= 2 else ""));
-
-        for index, item in enumerate(items):
+        for index, item in enumerate( items):
             item_str = str(item)
-            index = str(index)
+            index = str(index+1)
 
             maybe_colored_index = maybe_color_str(index + ") ", index_color)
 
@@ -269,18 +269,21 @@ def usage():
           "\tm -m --move <index> <new index>             -- Move an item from index to new index.\n" \
           "\tr -r --remove <indices...>                  -- Remove items by their indices.\n" \
           "\tl -l --list ls                              -- List all items.\n" \
-          "\t-org --orgfile <filename>                   -- Add org file TODOs.\n" \
+          "\ts -s --sort                                 -- Sort items chronologically.\n" \
+          "\t-org --orgfile <filename>                   -- Add org file todos.\n" \
           "\n" \
           "\th -h --help                                 -- Display help message.\n" \
           "\tv -v --version                              -- Display version info.\n" \
-          "\n\n" \
+          "\n" \
+          "Use date in format YYYY/MM/DD - 2020/07/05, or <days>d - 3d, for due date of todo item\n\n" \
           "Configuration Options (See " + config_location + config_name + "):\n" \
           "* color = true / false\n" \
           "* detail_mode = true / false\n" \
+          "Reminders data file: " + datafile_location + datafile_name + "\n"
 
 
 def print_version():
-    print("\npy-todo-ng 1.0.1 - with readline - "
+    print("\ntodo-ng 1.0.1 - with readline - "
            "based on py-todo by Marco Wang\n"
           "\n"
           "This is free software, see the source for copying conditions.  There is NO\n"
@@ -346,13 +349,14 @@ if __name__ == '__main__':
                 list_items(); print();
             except:
                 print("Item does not exist.")
+                print("fuckfuckfuck" + str(indices))
         else:
             print(usage())
 
     elif sys.argv[1] in ['e', '-e', '--edit']:
         if len(sys.argv) >= 3:
             try:
-                item = items[int(sys.argv[2])]
+                item = items[int(sys.argv[2])-1]
                 title, exp_date_str = take_input(3, 4, default_title=item.title)
 
                 item.title = title
@@ -373,9 +377,10 @@ if __name__ == '__main__':
     elif sys.argv[1] in ["m", "-m", "--move"]:
         if len(sys.argv) == 4:
             try:
-                to_move = items[int(sys.argv[2])]
-                remove_item([int(sys.argv[2])])
-                insert_todo_item(int(sys.argv[3]), to_move)
+                """ currently borked """
+                to_move = items[int(sys.argv[2])-1]
+                remove_item([int(sys.argv[2])-1])
+                insert_todo_item(int(sys.argv[3])-1, to_move)
             except (IndexError, ValueError):
                 print("Item does not exist.")
                 sys.exit(1)

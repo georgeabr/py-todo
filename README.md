@@ -1,6 +1,6 @@
 <div align="center">
 <h3>todo-ng</h3>
-<img src="https://github.com/georgeabr/py-todo-ng/blob/master/py-todo-ng.png">
+<img src="https://github.com/georgeabr/py-todo-ng/blob/master/todo-ng.png">
 
 </div>
 

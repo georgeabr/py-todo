@@ -5,6 +5,19 @@ import os
 import sys
 import pickle
 import re
+
+import readline as rl
+""" 
+for moving around in the input line with readline shortcuts 
+can be customised by editing ~/.inputrc. see
+https://docs.python.org/3.3/tutorial/interactive.html
+
+an example
+https://www.tutorialspoint.com/python-gnu-readline-interface
+"""
+
+""" import pyperclip """
+
 from math import ceil
 from enum import IntEnum
 from pathlib import Path
@@ -20,12 +33,17 @@ datafile_location = str(Path.home()) + '/.local/share/py-todo/'
 """ Define config and data file names """
 config_name = 'config'
 datafile_name = 'todo.dat'
+due_string = 'Already due'
 
 """ Define colors """
-index_color = '\x1b[34m{}\x1b[0m'
+index_color = '\x1b[36m{}\x1b[0m'
 date_color = '\x1b[32m{}\x1b[0m'
 due_color = '\x1b[31m{}\x1b[0m'
-today_color = '\x1b[33m{}\x1b[0m'
+today_color = '\x1b[4;33m{}\x1b[0m'
+tomorrow_color = '\x1b[36m{}\x1b[0m'
+
+now = datetime.now()
+dt_string = now.strftime("%a, %e %b %Y, %k:%M")
 
 """ Regex for removing terminal escape sequences from a string """
 esc_seq_reg = re.compile(r'\x1b[^m]*m')
@@ -58,9 +76,9 @@ class TodoItem:
         days_left = self.days_left
 
         if days_left == 0:
-            return self.title + " (Today)"  # Annotate as the current day
+            return self.title + " (Due today)"  # Annotate as the current day
         elif days_left == 1:
-            return self.title + " (Tomorrow)"  # Annotate as tomorrow
+            return self.title + " (Due tomorrow)"  # Annotate as tomorrow
         elif days_left > 1:
             output_str = self.title + " ("
 
@@ -91,12 +109,17 @@ class TodoItem:
                 # weeks_left == 0 iff this week;
                 # weeks_left == 1 iff next week.
                 if weeks_left == 0 or weeks_left == 1:
-                    output_str += "{this_or_next} {weekday}; ".format(
-                        this_or_next="This" if weeks_left == 0 else "Next",
+                    output_str += "Due in  " + str(days_left) + " days,"
+                    output_str += "{this_or_next} {weekday})".format(
+                        this_or_next="this" if weeks_left == 0 else " next",
                         weekday=self.exp_date.strftime("%A"))
-            return output_str + "{days_left} days left)".format(days_left=days_left)
+                    return output_str
+                elif weeks_left > 1:
+                    output_str += "Due in " + str(days_left) + " days, on " + self.exp_date.strftime("%a") + " " + self.exp_date.strftime("%e") + " " + self.exp_date.strftime("%b") +  ")"
+                    return output_str
+            # return output_str + "In " + str(days_left) + " days, " + self.exp_date.strftime("%a") + ", " + self.exp_date.strftime("%e") + " " + self.exp_date.strftime("%b") + " " + self.exp_date.strftime("%Y") + ")" 
         else:
-            return self.title + " (DUE!)"
+            return self.title + "\n\t\033[91m(" + due_string + ")"
 
     def __eq__(self, other):
         """ Override default equality """
@@ -144,8 +167,8 @@ def sort_items():
 def list_items():
     """ Iterate through each TodoItem in the items list and print it """
     if len(items) > 0:
-        print("You have {item_count} item{s} left on the reminder!".format(
-            item_count=len(items), s="s" if len(items) >= 2 else ""))
+        print("\nToday is " + dt_string + ".\nYou have \033[1;36m[{item_count}]\033[0m item{s} left on the reminder!".format(
+            item_count=len(items), s="s" if len(items) >= 2 else ""));
 
         for index, item in enumerate(items):
             item_str = str(item)
@@ -157,16 +180,16 @@ def list_items():
                 date = item_str[item_str.index('('):]  # Slice of str from the first occurrence of "(" (inclusive)
 
                 # The date could possibly be either color, so no harm in calling maybe_color_str multiple times
-                date = maybe_color_str(date, due_color, lambda: True if "DUE" in date else False)
-                date = maybe_color_str(date, date_color, lambda: True if "DUE" not in date else False)
-                date = maybe_color_str(date, today_color, lambda: True if "Today" in date else False)
+                date = maybe_color_str(date, due_color, lambda: True if due_string in date else False)
+                date = maybe_color_str(date, date_color, lambda: True if due_string not in date else False)
+                date = maybe_color_str(date, today_color, lambda: True if "today" in date else False)
+                date = maybe_color_str(date, tomorrow_color, lambda: True if "tomorrow" in date else False)
 
-                print(maybe_colored_index + item.title + " " + date)
+                print("  " + maybe_colored_index + item.title + "\n\t" + date)
             else:
-                print(maybe_colored_index + item_str)
+                print("  " + maybe_colored_index + item_str)
     else:
         print("No items left on the reminder.")
-
 
 def parse_date_str(exp_date_str):
     """Parses a date string and returns a datetime object
@@ -217,7 +240,7 @@ def scrape_keywords(line):
 
 
 def strip_line(line, word):
-    """Strips a line of it's *'s and keywords 
+    """Strips a line of its *s and keywords 
     :param line: The line to strip
     :param word: The keyword to strip from the line
     :returns: A stripped line
@@ -239,17 +262,17 @@ def scrape_date(line):
 
 def usage():
     return "\nUsage: " + sys.argv[0] + " <argument>\n" \
-          "-a --add                                  -- Add a new item.\n" \
-          "-a --add <title> <date or days>           -- Add a new item with a title and expiry date provided.\n" \
-          "-e --edit <index>                         -- Edit an item.\n" \
-          "-e --edit <index> <title> <date or days>  -- Edit an item with a title and expiry date provided.\n" \
-          "-m --move <index> <new index>             -- Move an item from index to new index.\n" \
-          "-r --remove <indices...>                  -- Remove items by their indices.\n" \
-          "-l --list                                 -- List all items.\n" \
-          "-org --orgfile <filename>                 -- Add org file TODOs.\n" \
+          "a -a --add add                              -- Add a new item.\n" \
+          "a -a --add <title> <date or days>           -- Add a new item with a title and expiry date provided.\n" \
+          "e -e --edit <index>                         -- Edit an item.\n" \
+          "e -e --edit <index> <title> <date or days>  -- Edit an item with a title and expiry date provided.\n" \
+          "m -m --move <index> <new index>             -- Move an item from index to new index.\n" \
+          "r -r --remove <indices...>                  -- Remove items by their indices.\n" \
+          "l -l --list ls                              -- List all items.\n" \
+          "-org --orgfile <filename>                   -- Add org file TODOs.\n" \
           "\n" \
-          "-h --help                                 -- Display help message.\n" \
-          "-v --version                              -- Display version info.\n" \
+          "h -h --help                                 -- Display help message.\n" \
+          "v -v --version                              -- Display version info.\n" \
           "\n\n" \
           "Configuration Options (See " + config_location + config_name + "):\n" \
           "* color = true / false\n" \
@@ -257,11 +280,11 @@ def usage():
 
 
 def print_version():
-    print("py-todo 1.3.3\n"
-          "Copyright (C) 2018 Marco Wang\n"
+    print("\npy-todo-ng 1.0.1 - with readline - "
+           "based on py-todo by Marco Wang\n"
           "\n"
           "This is free software, see the source for copying conditions.  There is NO\n"
-          "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE")
+          "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\n")
 
 
 
@@ -297,36 +320,36 @@ if __name__ == '__main__':
 
     # Command line argument parsing
     if len(sys.argv) <= 1:
+        list_items(); print();
+
+    elif sys.argv[1] in ['ls', 'l', '-l', '--list']:
         list_items()
 
-    elif sys.argv[1] in ['-l', '--list']:
-        list_items()
-
-    elif sys.argv[1] in ['-a', '--add']:
+    elif sys.argv[1] in ['a', 'add',  '-a', '--add']:
         try:
             title, exp_date_str = take_input(2, 3)
 
             exp_date = parse_date_str(exp_date_str)
             add_item(title, exp_date)
-            list_items()
+            list_items(); print();
         except KeyboardInterrupt:
             # If the input is canceled, print a newline for prettiness, list the items and exit
             print()
             list_items()
             sys.exit(1)
 
-    elif sys.argv[1] in ['-r', '--remove']:
+    elif sys.argv[1] in ['r', '-r', '--remove']:
         if len(sys.argv) >= 3:
             try:
                 indices = list(map(int, sys.argv[2:]))
                 remove_item(indices)
-                list_items()
+                list_items(); print();
             except:
                 print("Item does not exist.")
         else:
             print(usage())
 
-    elif sys.argv[1] in ['-e', '--edit']:
+    elif sys.argv[1] in ['e', '-e', '--edit']:
         if len(sys.argv) >= 3:
             try:
                 item = items[int(sys.argv[2])]
@@ -334,7 +357,7 @@ if __name__ == '__main__':
 
                 item.title = title
                 item.exp_date = parse_date_str(exp_date_str)
-                list_items()
+                list_items(); print();
             except IndexError:
                 print("Item does not exist.")
                 sys.exit()
@@ -347,7 +370,7 @@ if __name__ == '__main__':
         else:
             print(usage())
 
-    elif sys.argv[1] in ["-m", "--move"]:
+    elif sys.argv[1] in ["m", "-m", "--move"]:
         if len(sys.argv) == 4:
             try:
                 to_move = items[int(sys.argv[2])]
@@ -362,11 +385,11 @@ if __name__ == '__main__':
         else:
             print(usage())
 
-    elif sys.argv[1] in ['-s', '--sort']:
+    elif sys.argv[1] in ['s', '-s', '--sort']:
         sort_items()
         list_items()
 
-    elif sys.argv[1] in ['-org', '--orgfile']:
+    elif sys.argv[1] in ['org', '-org', '--orgfile']:
         keywords = []
         filename = str(sys.argv[2])
         # Open the orgfile
@@ -394,7 +417,7 @@ if __name__ == '__main__':
                             add_item(title, None)
         list_items()
 
-    elif sys.argv[1] in ['-v', '--version']:
+    elif sys.argv[1] in ['v', '-v', '--version']:
         print_version()
 
     else:
